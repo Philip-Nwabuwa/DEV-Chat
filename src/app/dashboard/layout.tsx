@@ -36,7 +36,7 @@ const Layout = async ({ children }: LayoutProps) => {
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
-      `user:${session.user.id}:incoming_friend_requests`
+      `user:${session.user.id}:incoming_friend_request`
     )) as User[]
   ).length;
 
@@ -81,7 +81,7 @@ const Layout = async ({ children }: LayoutProps) => {
                 initialUnseenRequestCount={unseenRequestCount}
               />
             </li>
-            //buttom section
+            {/* buttom section */}
             <li className="-mx-6 mt-auto flex items-center">
               <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
                 <div className="relative h-8 w-8 bg-gray-50">
