@@ -5,7 +5,8 @@ import { messageArrayValidator } from "@/lib/validations/message";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { FC } from "react";
+import Messages from "@/components/Messages";
+import ChatInput from "@/components/ChatInput";
 
 interface PageProps {
   params: {
@@ -52,7 +53,7 @@ const page = async ({ params }: PageProps) => {
   const initalMessages = await getChatMessages(chatId);
 
   return (
-    <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]">
+    <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-1rem)]">
       <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
         <div className="relative flex items-center space-x-4">
           <div className="relative">
@@ -76,6 +77,14 @@ const page = async ({ params }: PageProps) => {
           </div>
         </div>
       </div>
+      <Messages
+        chatId={chatId}
+        chatPartner={chatPartner}
+        sessionImg={session.user.image}
+        sessionId={session.user.id}
+        initialMessages={initalMessages}
+      />
+      <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </div>
   );
 };
