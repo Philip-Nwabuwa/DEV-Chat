@@ -1,28 +1,29 @@
-import { Icon, Icons } from "@/components/icons";
+import { Icons } from "@/components/Icons";
+import SignOutButton from "@/components/SignOutButton";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FC, ReactNode } from "react";
-import Image from "next/image";
-import SignOutButton from "@/components/SignOutButton";
+import { ReactNode } from "react";
 import FriendRequestSidebarOptions from "@/components/FriendRequestSidebarOptions";
 import { fetchRedis } from "@/helpers/redis";
 import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
 import SidebarChatList from "@/components/SidebarChatList";
+import MobileChatLayout from "@/components/MobileChatLayout";
+import { SidebarOption } from "@/types/typings";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-interface SidebarOption {
-  id: number;
-  name: string;
-  href: string;
-  Icon: Icon;
-}
+// Done after the video and optional: add page metadata
+export const metadata = {
+  title: "FriendZone | Dashboard",
+  description: "Your dashboard",
+};
 
-const SidebarOptions: SidebarOption[] = [
+const sidebarOptions: SidebarOption[] = [
   {
     id: 1,
     name: "Add friend",
@@ -40,31 +41,44 @@ const Layout = async ({ children }: LayoutProps) => {
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
-      `user:${session.user.id}:incoming_friend_request`
+      `user:${session.user.id}:incoming_friend_requests`
     )) as User[]
   ).length;
 
   return (
     <div className="w-full flex h-screen">
+      <div className="md:hidden">
+        <MobileChatLayout
+          friends={friends}
+          session={session}
+          sidebarOptions={sidebarOptions}
+          unseenRequestCount={unseenRequestCount}
+        />
+      </div>
+
       <div className="hidden md:flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
         <Link href="/dashboard" className="flex h-16 shrink-0 items-center">
           <Icons.Logo className="h-8 w-auto text-indigo-600" />
         </Link>
+
         {friends.length > 0 ? (
           <div className="text-xs font-semibold leading-6 text-gray-400">
             Your chats
           </div>
         ) : null}
+
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <SidebarChatList friends={friends} sessionId={session.user.id} />
             <li>
-              <div className="text-sm font-semibold leading-6 text-gray-400">
+              <SidebarChatList sessionId={session.user.id} friends={friends} />
+            </li>
+            <li>
+              <div className="text-xs font-semibold leading-6 text-gray-400">
                 Overview
               </div>
 
               <ul role="list" className="-mx-2 mt-2 space-y-1">
-                {SidebarOptions.map((option) => {
+                {sidebarOptions.map((option) => {
                   const Icon = Icons[option.Icon];
                   return (
                     <li key={option.id}>
@@ -81,6 +95,7 @@ const Layout = async ({ children }: LayoutProps) => {
                     </li>
                   );
                 })}
+
                 <li>
                   <FriendRequestSidebarOptions
                     sessionId={session.user.id}
@@ -90,7 +105,6 @@ const Layout = async ({ children }: LayoutProps) => {
               </ul>
             </li>
 
-            {/* buttom section */}
             <li className="-mx-6 mt-auto flex items-center">
               <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
                 <div className="relative h-8 w-8 bg-gray-50">
@@ -117,6 +131,7 @@ const Layout = async ({ children }: LayoutProps) => {
           </ul>
         </nav>
       </div>
+
       <aside className="max-h-screen container py-16 md:py-12 w-full">
         {children}
       </aside>
