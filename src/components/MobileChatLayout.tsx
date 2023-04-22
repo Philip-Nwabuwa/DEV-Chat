@@ -46,7 +46,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
           <Icons.Logo className="h-6 w-auto text-indigo-600" />
         </Link>
         <Button onClick={() => setOpen(true)} className="gap-4">
-          Menu <Menu className="h-6 w-6" />
+          <Menu className="h-6 w-6" />
         </Button>
       </div>
       <Transition.Root show={open} as={Fragment}>
