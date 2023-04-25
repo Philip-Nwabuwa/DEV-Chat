@@ -38,6 +38,9 @@ const UnseenChatToast: FC<UnseenChatToastProps> = ({
             <div className="relative h-10 w-10">
               <Image
                 fill
+                sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
                 referrerPolicy="no-referrer"
                 className="rounded-full"
                 src={senderImg}

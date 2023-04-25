@@ -110,6 +110,9 @@ const Layout = async ({ children }: LayoutProps) => {
                 <div className="relative h-8 w-8 bg-gray-50">
                   <Image
                     fill
+                    sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
                     referrerPolicy="no-referrer"
                     className="rounded-full"
                     src={session.user.image || ""}
@@ -132,7 +135,7 @@ const Layout = async ({ children }: LayoutProps) => {
         </nav>
       </div>
 
-      <aside className="max-h-screen container py-16 md:py-12 w-full">
+      <aside className="max-h-screen container pt-16 pb-3 md:py-3 w-full">
         {children}
       </aside>
     </div>
