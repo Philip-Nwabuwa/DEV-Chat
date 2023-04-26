@@ -18,10 +18,13 @@ const page = async () => {
     incomingSenderIds.map(async (senderId) => {
       const sender = (await fetchRedis("get", `user:${senderId}`)) as string;
       const senderParsed = JSON.parse(sender) as User;
+      // add a check for null or undefined before accessing the email property
+      const senderEmail = senderParsed ? senderParsed.email : null;
+      console.log(senderEmail);
 
       return {
         senderId,
-        senderEmail: senderParsed.email,
+        senderEmail,
       };
     })
   );
